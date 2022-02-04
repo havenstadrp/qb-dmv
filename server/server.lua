@@ -1,19 +1,17 @@
 QBCore = exports['qb-core']:GetCoreObject()
 
 --Event to Remove Money from player upon failed attempt at theoritical test
-RegisterServerEvent('qb-dmv:theorypaymentfailed')
-AddEventHandler('qb-dmv:theorypaymentfailed', function()
+RegisterNetEvent('qb-dmv:theorypaymentfailed', function()
     local amount = Config.Amount['theoretical']/2
 	local _source = source
 	local Player = QBCore.Functions.GetPlayer(_source)
     Player.Functions.RemoveMoney(Config.PaymentType, amount)
-    TriggerClientEvent('QBCore:Notify', "You paid $"..amount.."","success")
-    TriggerClientEvent('QBCore:Notify', "You failed the test. Please try again!", "error")
+    TriggerClientEvent('QBCore:Notify', "U betaalde €"..amount.."","success")
+    TriggerClientEvent('QBCore:Notify', "Je bent gezakt voor de test. Probeer het opnieuw!", "error")
 end)
 
 --Event to Remove Money and Add Item upon successful attempt at theoritical test
-RegisterServerEvent('qb-dmv:theorypaymentpassed')
-AddEventHandler('qb-dmv:theorypaymentpassed', function()
+RegisterNetEvent('qb-dmv:theorypaymentpassed', function()
     if Config.DriversTest then
         local info = {}
         local _source = source
@@ -25,12 +23,12 @@ AddEventHandler('qb-dmv:theorypaymentpassed', function()
         Player.Functions.RemoveMoney(Config.PaymentType, Config.Amount['theoretical'])
         if Config.GiveItem then
             Player.Functions.AddItem('permit', 1, nil, info)
-            TriggerClientEvent('QBCore:Notify', "You passed and got your Permit", "success")
+            TriggerClientEvent('QBCore:Notify', "Je bent geslaagd en hebt je tijdelijk rijbewijs ontvangen", "success")
             TriggerClientEvent('inventory:client:ItemBox', _source, QBCore.Shared.Items['driver_license'], 'add')
         else
-            TriggerClientEvent('QBCore:Notify', "You passed the test. Go to City to get your Permit")
+            TriggerClientEvent('QBCore:Notify', "Je bent geslaagd voor de test. Ga naar het stadhuis om uw rijbewijs te krijgen")
         end
-        TriggerClientEvent('QBCore:Notify', "You paid $"..Config.Amount['theoretical'], "success")
+        TriggerClientEvent('QBCore:Notify', "U betaalde €"..Config.Amount['theoretical'], "success")
     elseif Config.DriversTest == false then
         info.firstname = Player.PlayerData.charinfo.firstname
         info.lastname = Player.PlayerData.charinfo.lastname
@@ -42,18 +40,17 @@ AddEventHandler('qb-dmv:theorypaymentpassed', function()
         Player.Functions.RemoveMoney(Config.PaymentType, Config.Amount['driving'])
         if Config.GiveItem then
             Player.Functions.AddItem('driver_license', 1, nil, info)
-            TriggerClientEvent('QBCore:Notify', "You passed and got your Drivers License", "success")
+            TriggerClientEvent('QBCore:Notify', "Je bent geslaagd en hebt je voorlopig rijbewijs gehaald", "success")
             TriggerClientEvent('inventory:client:ItemBox', _source, QBCore.Shared.Items['driver_license'], 'add')
         else
-            TriggerClientEvent('QBCore:Notify', "You passed! Go to City Hall and get your Drivers License")
+            TriggerClientEvent('QBCore:Notify', "Je bent geslaagd! Ga naar het stadhuis en haal je voorlopig rijbewijs")
         end
-        TriggerClientEvent('QBCore:Notify', "You paid $"..Config.Amount['driving'],"success")
+        TriggerClientEvent('QBCore:Notify', "U betaalde €"..Config.Amount['driving'],"success")
         
     end
 end)
 
-RegisterServerEvent('qb-dmv:driverpaymentpassed')
-AddEventHandler('qb-dmv:driverpaymentpassed', function ()
+RegisterNetEvent('qb-dmv:driverpaymentpassed', function ()
     if Config.DriversTest then
         local info = {}
         local _source = source
@@ -70,22 +67,21 @@ AddEventHandler('qb-dmv:driverpaymentpassed', function ()
         Player.Functions.RemoveMoney(Config.PaymentType, Config.Amount['driving'])
         if Config.GiveItem == true then
             Player.Functions.AddItem('driver_license', 1, nil, info)
-            TriggerClientEvent('QBCore:Notify', "You passed the Drivers Test and got your Drivers License", "success")
+            TriggerClientEvent('QBCore:Notify', "Je bent geslaagd voor het rijexamen en hebt je rijbewijs gekregen", "success")
             TriggerClientEvent('inventory:client:ItemBox', _source, QBCore.Shared.Items['driver_license'], 'add')
         else
-            TriggerClientEvent('QBCore:Notify', "You passed the Drivers Test. Go to City Hall to get your License")
+            TriggerClientEvent('QBCore:Notify', "Je bent geslaagd voor het rijexamen. Ga naar het stadhuis om uw rijbewijs te halen")
         end
-        TriggerClientEvent('QBCore:Notify', "You paid $"..Config.Amount['driving'],"success")
+        TriggerClientEvent('QBCore:Notify', "U betaalde €"..Config.Amount['driving'],"success")
     end
 end)
 
-RegisterServerEvent('qb-dmv:driverpaymentfailed')
-AddEventHandler('qb-dmv:driverpaymentfailed', function ()
+RegisterNetEvent('qb-dmv:driverpaymentfailed', function ()
     local amount = Config.Amount['driving']/2
     local _source = source
     local Player = QBCore.Functions.GetPlayer(_source)
     Player.Functions.RemoveMoney(Config.PaymentType, amount)
-    QBCore.Functions.Notify("You paid $"..amount.."","success")
+    QBCore.Functions.Notify("U betaalde €"..amount.."","success")
 end)
 
 QBCore.Functions.CreateCallback('qb-dmv:server:menu', function(source, cb)

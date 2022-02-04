@@ -19,11 +19,11 @@ end)
 function OpenMenu()
     exports['qb-menu']:openMenu({
       {
-        header = "DMV School",
+        header = "VAB Rijschool",
         isMenuHeader = true,
       },
       {
-        header = "Start Theoretical Test",
+        header = "Start Theoretisch Examen",
         txt = "$"..Config.Amount['theoretical'].."",
         params = {
           event = 'qb-dmv:startquiz',
@@ -38,11 +38,11 @@ end
 function OpenMenu2()
   exports['qb-menu']:openMenu({
     {
-      header = "DMV School",
+      header = "VAB Rijschool",
       isMenuHeader = true,
     },
     {
-      header = "Start Driving Test",
+      header = "Start Rij Examen",
       txt = "$"..Config.Amount['driving'].."",
       params = {
         event = 'qb-dmv:startdriver',
@@ -52,7 +52,7 @@ function OpenMenu2()
       }
     },
     {
-      header = "Start CDL Drving Test",
+      header = "Start Truck Rij Examen",
       txt = "$"..Config.Amount['cdl'].."",
       params = {
         event = 'qb-dmv:startcdl'
@@ -71,7 +71,7 @@ RegisterNetEvent('qb-dmv:startdriver', function()
         local prevCoords = GetEntityCoords(PlayerPedId())
         QBCore.Functions.SpawnVehicle(Config.VehicleModels.driver, function(veh)
             TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-            exports['LegacyFuel']:SetFuel(veh, 100)
+            exports['cc-fuel']:SetFuel(veh, 100)
             SetVehicleNumberPlateText(veh, 'DMV')
             SetEntityAsMissionEntity(veh, true, true)
             SetEntityHeading(veh, Config.Location['spawn'].w)
@@ -79,7 +79,7 @@ RegisterNetEvent('qb-dmv:startdriver', function()
             TriggerServerEvent('qb-vehicletuning:server:SaveVehicleProps', QBCore.Functions.GetVehicleProperties(veh))
             LastVehicleHealth = GetVehicleBodyHealth(veh)
             CurrentVehicle = veh
-            QBCore.Functions.Notify('You are taking the Driving test')
+            QBCore.Functions.Notify('Je bent begonnen met het rijexamen')
         end, Config.Location['spawn'], false)
 end)
 
@@ -108,10 +108,10 @@ function StopTheoryTest(success)
     })
     SetNuiFocus(false)
     if success then
-      QBCore.Functions.Notify('You passed your test!', 'success')
+      QBCore.Functions.Notify('U bent geslaagd! :)', 'success')
       TriggerServerEvent('qb-dmv:theorypaymentpassed')
     else
-      QBCore.Functions.Notify('You failed the test!', 'error')
+      QBCore.Functions.Notify('U bent gebuisd! :(', 'error')
       TriggerServerEvent('qb-dmv:theorypaymentfailed')
     end
 end
@@ -122,12 +122,12 @@ function StopDriveTest(success)
     local veh = GetVehiclePedIsIn(playerPed)
     if success then
       TriggerServerEvent('qb-dmv:driverpaymentpassed')
-      QBCore.Functions.Notify('You passed the Drving Test!')
+      QBCore.Functions.Notify('Je bent geslaagd voor het rijexamen!')
       QBCore.Functions.DeleteVehicle(veh)
       CurrentTest = nil
     elseif success == false then
       TriggerServerEvent('qb-dmv:driverpaymentfailed')
-      QBCore.Functions.Notify('You Failed the Driving Test!')
+      QBCore.Functions.Notify('Je bent niet geslaagd voor het rijexamen!')
       CurrentTest = nil
       RemoveBlip(CurrentBlip)
       QBCore.Functions.DeleteVehicle(veh)
@@ -194,8 +194,8 @@ Citizen.CreateThread(function()
                       if not IsAboveSpeedLimit then
                           DriveErrors       = DriveErrors + 1
                           IsAboveSpeedLimit = true
-                          QBCore.Functions.Notify('Driving too fast',"error")
-                          QBCore.Functions.Notify("Errors:"..tostring(DriveErrors).."/" ..Config.MaxErrors, "error")
+                          QBCore.Functions.Notify('Te snel rijden',"error")
+                          QBCore.Functions.Notify("Fouten:"..tostring(DriveErrors).."/" ..Config.MaxErrors, "error")
                       end
                   end
               end
@@ -206,7 +206,7 @@ Citizen.CreateThread(function()
               if health < LastVehicleHealth then
                   DriveErrors = DriveErrors + 1
                   QBCore.Functions.Notify('You Damaged the Vehicle')
-                  QBCore.Functions.Notify("Errors:"..tostring(DriveErrors).."/" ..Config.MaxErrors, "error")
+                  QBCore.Functions.Notify("Fouten:"..tostring(DriveErrors).."/" ..Config.MaxErrors, "error")
                   LastVehicleHealth = health
               end
               if DriveErrors >= Config.MaxErrors then
@@ -293,7 +293,7 @@ Citizen.CreateThread(function ()
                                       OpenMenu2()
                                   end
                               else
-                                QBCore.Functions.Notify("You already took your tests! Go to City Hall to buy your License.")
+                                QBCore.Functions.Notify("Je hebt je examens al gedaan! Ga naar het stadhuis om uw licentie te kopen.")
                               end
                           end)
                       else
@@ -303,7 +303,7 @@ Citizen.CreateThread(function ()
                   end)
                 end
               elseif CurrentTest == 'drive' and IsControlJustReleased(0, 46) then
-                QBCore.Functions.Notify("You\'re already Taking the Drivers Test.")
+                QBCore.Functions.Notify("Je bent al bezig met het rijexamen.")
               end
             end
         end
@@ -370,19 +370,19 @@ CreateThread(function ()
                         type = "client",
                         event = "qb-dmv:startdriver",
                         icon = 'fas fa-example',
-                        label = 'Start Drivers Test $'..Config.Amount['driving'].."",
+                        label = 'Start Rijexamen €'..Config.Amount['driving'].."",
                       },
                       {
                         type = "client",
                         event = "qb-dmv:startcdl",
                         icon = "fas fa-example",
-                        label = 'Start Drivers Test $'..Config.Amount['cdl'].."",
+                        label = 'Start Rijexamen €'..Config.Amount['cdl'].."",
                       }
                   },
                     distance = 2.5,
               })
               else
-                QBCore.Functions.Notify("You already took your tests!")
+                QBCore.Functions.Notify("Je hebt je tests al gedaan!")
               end
           end)
       else
@@ -392,7 +392,7 @@ CreateThread(function ()
                 type = "client",
                 event = "qb-dmv:startquiz",
                 icon = 'fas fa-example',
-                label = 'Start Theoretical Test $'..Config.Amount['theoretical'].."",
+                label = 'Start Theoretisch examen €'..Config.Amount['theoretical'].."",
               },
           },
             distance = 2.5,
