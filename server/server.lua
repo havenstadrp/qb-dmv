@@ -23,8 +23,8 @@ RegisterNetEvent('qb-dmv:theorypaymentpassed', function()
         Player.Functions.RemoveMoney(Config.PaymentType, Config.Amount['theoretical'])
         if Config.GiveItem then
             Player.Functions.AddItem('permit', 1, nil, info)
-            TriggerClientEvent('QBCore:Notify', "Je bent geslaagd en hebt je tijdelijk rijbewijs ontvangen", "success")
-            TriggerClientEvent('inventory:client:ItemBox', _source, QBCore.Shared.Items['driver_license'], 'add')
+            TriggerClientEvent('QBCore:Notify', "Je bent geslaagd en hebt je tijdelijk rijbewijs ontvange", "success")
+            TriggerClientEvent('inventory:client:ItemBox', _source, QBCore.Shared.Items['permit'], 'add')
         else
             TriggerClientEvent('QBCore:Notify', "Je bent geslaagd voor de test. Ga naar het stadhuis om uw rijbewijs te krijgen")
         end
@@ -55,7 +55,7 @@ RegisterNetEvent('qb-dmv:driverpaymentpassed', function ()
         local info = {}
         local _source = source
         local Player = QBCore.Functions.GetPlayer(_source)
-        local licenseTable = Player.PlayerData.metadata['licences']
+        local licenseTable = Player.PlayerData.metadata['licene']
         info.citizenid = Player.PlayerData.citizenid
         info.firstname = Player.PlayerData.charinfo.firstname
         info.lastname = Player.PlayerData.charinfo.lastname
@@ -87,7 +87,7 @@ end)
 QBCore.Functions.CreateCallback('qb-dmv:server:menu', function(source, cb)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    local licenseTable = Player.PlayerData.metadata["licences"]
+    local licenseTable = Player.PlayerData.metadata['licences']
     if licenseTable['permit'] == true then
         cb(false)
     else
@@ -98,7 +98,7 @@ end)
 QBCore.Functions.CreateCallback('qb-dmv:server:menu2', function(source, cb)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    local licenseTable = Player.PlayerData.metadata["licences"]
+    local licenseTable = Player.PlayerData.metadata['licences']
     if licenseTable['driver'] then
         cb(false)
     elseif licenseTable['permit'] and licenseTable['driver'] == false then
