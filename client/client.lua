@@ -206,7 +206,7 @@ Citizen.CreateThread(function()
               local health = GetVehicleBodyHealth(vehicle)
               if health < LastVehicleHealth then
                   DriveErrors = DriveErrors + 1
-                  QBCore.Functions.Notify('You Damaged the Vehicle')
+                  QBCore.Functions.Notify('U hebt het voertuig beschadigd')
                   QBCore.Functions.Notify("Fouten:"..tostring(DriveErrors).."/" ..Config.MaxErrors, "error")
                   LastVehicleHealth = health
               end

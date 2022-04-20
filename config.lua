@@ -52,10 +52,10 @@ Config.CheckPoints = {                                      -- Each Cheackpoint 
 
   --1 
   {
-     Pos = {x = 255.139, y = -1400.731, z = 28.537},
-     Action = function(playerPed, vehicle, setCurrentZoneType)
-       DrawMissionText('ga naar het volgend punt ' .. Config.SpeedLimits['residence'] .. 'km/h', 5000)
-     end
+    Pos = {x = 255.139, y = -1400.731, z = 28.537},
+    Action = function(playerPed, vehicle, setCurrentZoneType)
+      DrawMissionText('ga naar het volgend punt ' .. Config.SpeedLimits['residence'] .. 'km/h', 5000)
+    end
   },
 
   --2
