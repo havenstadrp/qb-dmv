@@ -12,6 +12,10 @@ end)
 
 --Event to Remove Money and Add Item upon successful attempt at theoritical test
 RegisterNetEvent('qb-dmv:theorypaymentpassed', function()
+	local _source = source
+	local Player = QBCore.Functions.GetPlayer(_source)
+    local license = true
+    local info = {}
     if Config.DriversTest then
         local info = {}
         local _source = source
@@ -51,11 +55,14 @@ RegisterNetEvent('qb-dmv:theorypaymentpassed', function()
 end)
 
 RegisterNetEvent('qb-dmv:driverpaymentpassed', function ()
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    local info = {}
     if Config.DriversTest then
         local info = {}
         local _source = source
         local Player = QBCore.Functions.GetPlayer(_source)
-        local licenseTable = Player.PlayerData.metadata['licene']
+        local licenseTable = Player.PlayerData.metadata['licences']
         info.citizenid = Player.PlayerData.citizenid
         info.firstname = Player.PlayerData.charinfo.firstname
         info.lastname = Player.PlayerData.charinfo.lastname
