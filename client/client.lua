@@ -10,11 +10,11 @@ local CurrentCheckPoint = 0
 local CurrentZoneType   = nil
 local spawnedPeds = {}
 
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
-AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
-    isLoggedIn = true
-    Player = QBCore.Functions.GetPlayerData()
-end)
+-- RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
+-- AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
+--     isLoggedIn = true
+--     Player = QBCore.Functions.GetPlayerData()
+-- end)
 
 -- Opens qb-menu to select dmv options
 function OpenMenu()
@@ -68,12 +68,12 @@ RegisterNetEvent('qb-dmv:startdriver', function()
         LastCheckPoint = -1
         CurrentCheckPoint = 0
         IsAboveSpeedLimit = false
-        CurrentZoneType = 'residence'
+        CurrentZoneType = 'traag'
         local prevCoords = GetEntityCoords(PlayerPedId())
         QBCore.Functions.SpawnVehicle(Config.VehicleModels.driver, function(veh)
             TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-            exports['cc-fuel']:SetFuel(veh, 100)
-            SetVehicleNumberPlateText(veh, 'DMV')
+            exports['LegacyFuel']:SetFuel(veh, 100)
+            SetVehicleNumberPlateText(veh, 'NOOB')
             SetEntityAsMissionEntity(veh, true, true)
             SetEntityHeading(veh, Config.Location['spawn'].w)
             TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlate(veh))
@@ -193,6 +193,7 @@ Citizen.CreateThread(function()
                   if CurrentZoneType == k and speed > v then
                   tooMuchSpeed = true
                       if not IsAboveSpeedLimit then
+                          print(speed)
                           DriveErrors       = DriveErrors + 1
                           IsAboveSpeedLimit = true
                           QBCore.Functions.Notify('Te snel rijden',"error")
