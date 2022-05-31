@@ -16,7 +16,7 @@ local spawnedPeds = {}
 --     Player = QBCore.Functions.GetPlayerData()
 -- end)
 
--- Opens qb-menu to select dmv options
+-- Opens Theroritical menu if permit = false in database
 function OpenMenu()
     exports['qb-menu']:openMenu({
       {
@@ -36,6 +36,7 @@ function OpenMenu()
     })
 end
 
+-- Opens Driving Test Menu if driver = false in database
 function OpenMenu2()
   exports['qb-menu']:openMenu({
     {
@@ -61,6 +62,7 @@ function OpenMenu2()
     }
   })
 end
+
 -- Event to put in qb-menu to start driving test
 RegisterNetEvent('qb-dmv:startdriver', function()
         CurrentTest = 'drive'
@@ -101,6 +103,36 @@ AddEventHandler('qb-dmv:startquiz', function ()
 
 end)
 
+--Event For Notification Type
+RegisterNetEvent('qb-dmv:Notify', function (msg, time, type, title)
+  local notify = Config.NotifyType
+  if type == 'info' then
+    if notify == 'qbcore' then
+      type = 'primary'
+    elseif notify == 'okok' then
+      type = type
+    end
+  elseif type == 'warning' then
+    if notify == 'qbcore' then
+      type = 'error'
+    elseif notify == 'okok' then
+      type = type
+    end
+  end
+  if notify == 'qbcore' then
+    TriggerEvent('QBCore:Notify', msg, type, time)
+    --QBCore.Functions.Notify(msg, type, time)
+  elseif notify == 'okok' then
+    exports['okokNotify']:Alert(title, msg, time, type)
+  else
+    TriggerEvent('chat:addMessage', {
+      color = {255, 0, 0},
+      multiline = false,
+      args = {title, msg}
+    })
+  end
+end)
+
 -- When stopping/finishing theoritical test
 function StopTheoryTest(success) 
     CurrentTest = nil
@@ -122,6 +154,7 @@ function StopDriveTest(success)
     local playerPed = PlayerPedId()
     local veh = GetVehiclePedIsIn(playerPed)
     if success then
+      TriggerEvent('qb-dmv:Notify', 'You passed the driving test!', 3000, 'success', 'Passed')
       TriggerServerEvent('qb-dmv:driverpaymentpassed')
       QBCore.Functions.Notify('Je bent geslaagd voor het rijexamen!')
       QBCore.Functions.DeleteVehicle(veh)
@@ -286,9 +319,9 @@ Citizen.CreateThread(function ()
             if dist <= 1.5 then
               if CurrentTest ~= 'drive' then
                 if IsControlJustReleased(0, 46) then
-                  QBCore.Functions.TriggerCallback('qb-dmv:server:menu', function (permit)
+                  QBCore.Functions.TriggerCallback('qb-dmv:server:permitdata', function (permit)
                       if permit == false then
-                          QBCore.Functions.TriggerCallback('qb-dmv:server:menu2', function (license)
+                          QBCore.Functions.TriggerCallback('qb-dmv:server:licensedata', function (license)
                               if license then
                                   if drive then
                                       Wait(10)
