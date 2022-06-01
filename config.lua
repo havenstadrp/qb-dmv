@@ -1,24 +1,40 @@
 Config = {}
 
-Config.NotifyType = 'qbcore'                                --(qbcore | okok)<--This is the 2 options. Right now only supports QBCore:Notify or okokNotify
+Config.NotifyType = 'qbcore'                              --(qbcore | okok)<--This is the 2 options. Right now only supports QBCore:Notify or okokNotify
 
-Config.PaymentType = 'cash'                                 -- 'cash' or 'bank' What account to use for payment
-Config.DriversTest = true                                   --[[False = Do not have to take the drivers test to get a Drivers License(will give drivers_license after questionairre.) True = Requires you to take Drivers Test to get driver_license]]
-Config.SpeedMultiplier = 3.6                           --KM/H = 3.6 MPH = 2.236936
+Config.PaymentType = 'cash'                               -- 'cash' or 'bank' What account to use for payment
+Config.DriversTest = true                                 --[[False = Do not have to take the drivers test to get a Drivers License(will give drivers_license after 
+                                                            questionairre.) True = Requires you to take Drivers Test to get driver_license]]
+Config.SpeedMultiplier = 3.6                              --KM/H = 3.6 MPH = 2.236936
 Config.MaxErrors       = 20
-Config.UseTarget       = true                              --CURRENTLY NOT WORKING! (recommend leaving false until future update) Gotta fix the target menu to auto change without having to restart qb-target. True will use qb-target instead of qb-menu False will use qb-menu
---Config.Ped = 's_m_y_cop_01'
-Config.Ped = {                                              --Will Spawn this ped for qb-target if Config.UseTarget is true
-  {
-		model = 's_m_y_cop_01',                                 -- Ped to spawn
-		coords = vector4(214.3, -1400.02, 30.58, 324.41),       -- Coordinates to spawn ped at
-		gender = 'male',                                        -- Pretty obvious
-    gendernumber = 4                                        -- 4 = male 5 = female
-	},
+Config.UseTarget       = false                            -- True = Spawns a Ped to use qb-target with. False = Will use exports['qb-core']:DrawText or DrawText3Ds function depending on Config.UseNewQB
+Config.UseNewQB        = true                             -- If Not Using Target then if your QB files aren't updated to use exports['qb-core']:DrawText then make this false. If you'd rather use the exports['qb-core']:DrawText than use Target then make this true and make Config.UseTarget = false
+
+
+Config.TargetOptions = {
+  minusOne = true,                                        -- Gets the Coords you copied from qb-adminmenu and minuses 1 from the z coordinate to put the ped on the floor instead of floating in the air. Best to leave this true
+  freeze = true,                                          -- Freezes ped in place so nothing can move him. 
+  invincible = true,                                      -- Can't Kill Ped
+  blockevents = true,                                     -- Blocks other Events from showing up that isn't in the export for this script
+  options = { 
+    icon = 'fa-solid fa-car-burst',                       -- Icon to show up for Target Option
+    label = 'Open DMV',                                   -- Text to show up for Target Option
+  }
 }
 
-Config.FadeIn = true                                        -- Do you want to ped to fade in as you get closer?
-Config.GiveItem = true                                      -- true = will give item after passing. False = will require players to go to city hall to accuire item                                     -- Do you want to ped to fade in as you get closer?  Config.GiveItem = true                                      -- true = will give item after passing. False = will require players to go to city hall to accuire item
+Config.Location = {
+  ['marker'] = vector3(215.31, -1398.99, 30.58),           --Location of Blip for DMV School and Location of Start Marker if Config.UseNewQB = false
+  ['spawn'] = vector4(240.3858, -1414.18, 30.457, 320.0),    -- Location to spawn vehicle upon starting Drivers Test
+  ['coords'] = vector4(214.6, -1400.15, 30.58, 324.82),    -- Location of Ped if Config.UseTarget True or Loction of QB:DrawText Area if Config.UseTarget = false and Config.UseNewQB = true
+  ['useZ'] = true,                                         -- Use Z coord for Config.Loacation['coords']. Best to leave this true
+
+  ['ped'] = {
+    ['model'] = 's_m_y_cop_01',                             -- Ped to spawn if Config.UseTarget is true.
+  },
+  ['radius'] = 5.0,                                         -- If Config.UseNewQB = true and Config.UseTarget = false then this is how far away you have to be from the above coordinates.
+}
+
+Config.GiveItem = false                                      -- true = will give item after passing. False = will require players to go to city hall to accuire item
 
 Config.Amount = {
     ['theoretical'] = 150,                                   --theoretical test payment amount(If Config.DriversTest = false then the theoritical test will go to the drivers test amount.)
@@ -26,11 +42,7 @@ Config.Amount = {
     ['cdl']         = 2500                                   --CDL Test Payment Amount
 }
 
-Config.Location = {
-    ['ped'] = vector4(214.56, -1400.25, 30.58, 323.03),     --Location of Ped to spawn if Config.UseTarget is true
-    ['marker'] = vector3(215.31, -1398.99, 30.58),          --Location of Blip and marker
-    ['spawn'] = vector4(240.3858, -1414.18, 30.457, 320.0)   -- Location to spawn vehicle upon starting Drivers Test
-} Config.Blip = {                                             -- Blip Config
+Config.Blip = {                                             -- Blip Config
   Sprite = 380,
   Display = 4,
   Color = 1,

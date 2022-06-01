@@ -88,7 +88,7 @@ RegisterNetEvent('qb-dmv:driverpaymentfailed', function ()
     local _source = source
     local Player = QBCore.Functions.GetPlayer(_source)
     Player.Functions.RemoveMoney(Config.PaymentType, amount)
-    QBCore.Functions.Notify("U betaalde €"..amount.."","success")
+    TriggerClientEvent('qb-dmv:Notify', source, 'U betaalde €'..amount, 3000, 'error', 'Paid')
 end)
 
 QBCore.Functions.CreateCallback('qb-dmv:server:permitdata', function(source, cb)
