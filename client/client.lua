@@ -439,37 +439,39 @@ end)
 CreateThread(function()
   while true do
     Wait(10)
-    if CurrentTest == 'drive' then
-      local playerPed = PlayerPedId()
-      if IsPedInAnyVehicle(playerPed, false) then
-        local vehicle      = GetVehiclePedIsIn(playerPed, false)
-        local speed        = GetEntitySpeed(vehicle) * Config.SpeedMultiplier
-        local tooMuchSpeed = false
-        for k, v in pairs(Config.SpeedLimits) do
-          if CurrentZoneType == k and speed > v then
-            tooMuchSpeed = true
-            if not IsAboveSpeedLimit then
-              print(speed)
-              DriveErrors       = DriveErrors + 1
-              IsAboveSpeedLimit = true
-              QBCore.Functions.Notify('Te snel rijden', "error")
-              QBCore.Functions.Notify("Fouten:" .. tostring(DriveErrors) .. "/" .. Config.MaxErrors, "error")
+    if Config.Debug == false then
+      if CurrentTest == 'drive' then
+        local playerPed = PlayerPedId()
+        if IsPedInAnyVehicle(playerPed, false) then
+          local vehicle      = GetVehiclePedIsIn(playerPed, false)
+          local speed        = GetEntitySpeed(vehicle) * Config.SpeedMultiplier
+          local tooMuchSpeed = false
+          for k, v in pairs(Config.SpeedLimits) do
+            if CurrentZoneType == k and speed > v then
+              tooMuchSpeed = true
+              if not IsAboveSpeedLimit then
+                print(speed)
+                DriveErrors       = DriveErrors + 1
+                IsAboveSpeedLimit = true
+                QBCore.Functions.Notify('Te snel rijden', "error")
+                QBCore.Functions.Notify("Fouten:" .. tostring(DriveErrors) .. "/" .. Config.MaxErrors, "error")
+              end
             end
           end
-        end
-        if not tooMuchSpeed then
-          IsAboveSpeedLimit = false
-        end
-        local health = GetVehicleBodyHealth(vehicle)
-        if health < LastVehicleHealth then
-          DriveErrors = DriveErrors + 1
-          QBCore.Functions.Notify('U hebt het voertuig beschadigd')
-          QBCore.Functions.Notify("Fouten:" .. tostring(DriveErrors) .. "/" .. Config.MaxErrors, "error")
-          LastVehicleHealth = health
-        end
-        if DriveErrors >= Config.MaxErrors then
-          Wait(10)
-          StopDriveTest(false)
+          if not tooMuchSpeed then
+            IsAboveSpeedLimit = false
+          end
+          local health = GetVehicleBodyHealth(vehicle)
+          if health < LastVehicleHealth then
+            DriveErrors = DriveErrors + 1
+            QBCore.Functions.Notify('U hebt het voertuig beschadigd')
+            QBCore.Functions.Notify("Fouten:" .. tostring(DriveErrors) .. "/" .. Config.MaxErrors, "error")
+            LastVehicleHealth = health
+          end
+          if DriveErrors >= Config.MaxErrors then
+            Wait(10)
+            StopDriveTest(false)
+          end
         end
       end
     end
