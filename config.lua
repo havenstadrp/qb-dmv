@@ -9,6 +9,7 @@ Config.MaxErrors       = 20
 Config.UseTarget       = false -- True = Spawns a Ped to use qb-target with. False = Will use exports['qb-core']:DrawText or DrawText3Ds function depending on Config.UseNewQB
 Config.UseNewQB        = true -- If Not Using Target then if your QB files aren't updated to use exports['qb-core']:DrawText then make this false. If you'd rather use the exports['qb-core']:DrawText than use Target then make this true and make Config.UseTarget = false
 
+Config.Debug           = true
 
 Config.TargetOptions = {
   minusOne = true, -- Gets the Coords you copied from qb-adminmenu and minuses 1 from the z coordinate to put the ped on the floor instead of floating in the air. Best to leave this true
@@ -30,7 +31,7 @@ Config.Location = {
   ['ped'] = {
     ['model'] = 's_m_y_cop_01', -- Ped to spawn if Config.UseTarget is true.
   },
-  ['radius'] = 5.0, -- If Config.UseNewQB = true and Config.UseTarget = false then this is how far away you have to be from the above coordinates.
+  ['radius'] = 2.0, -- If Config.UseNewQB = true and Config.UseTarget = false then this is how far away you have to be from the above coordinates.
 }
 
 Config.GiveItem = false -- true = will give item after passing. False = will require players to go to city hall to accuire item
@@ -152,7 +153,7 @@ Config.CheckPoints = { -- Each Cheackpoint for the Drivers Test
     Action = function(playerPed, vehicle, setCurrentZoneType)
       setCurrentZoneType('snelweg')
       DrawMissionText('U mag nu de snelweg oprijden. Let goed op uw snelheid (' ..
-        Config.SpeedLimits['snelweg'] .. ' km/h)', 5000)
+        Config.SpeedLimits['snelweg'] -5 .. ' km/h)', 5000)
       PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', 0, 0, 1)
     end
   },
@@ -210,7 +211,7 @@ Config.CheckPoints = { -- Each Cheackpoint for the Drivers Test
       Citizen.Wait(6000)
       FreezeEntityPosition(vehicle, false)
       DrawMissionText('Verdorie, pokemon kwijt. Euhm hier links af naar de stad (' ..
-        Config.SpeedLimits['stad'] .. ' km/h)', 5000)
+        Config.SpeedLimits['stad'] -5 .. ' km/h)', 5000)
     end
   },
   --17
@@ -345,7 +346,7 @@ Config.CheckPoints = { -- Each Cheackpoint for the Drivers Test
   {
     Pos = { x = -540.336, y = 278.2394, z = 81.578 },
     Action = function(playerPed, vehicle, setCurrentZoneType)
-      DrawMissionText('Hier moet je traag rijden (' .. Config.SpeedLimits['bbkom'] .. ' km/h)', 5000)
+      DrawMissionText('Hier moet je traag rijden (' .. Config.SpeedLimits['bbkom'] -5 .. ' km/h)', 5000)
     end
   },
   --37
