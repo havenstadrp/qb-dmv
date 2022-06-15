@@ -3,11 +3,11 @@ QBCore = exports['qb-core']:GetCoreObject()
 -------------
 -- Variables --
 ------------
-local CurrentTest = nil
-local LastCheckPoint = -1
+local CurrentTest       = nil
+local LastCheckPoint    = -1
 local CurrentCheckPoint = 0
 local CurrentZoneType   = nil
-local inDMV = false
+local inDMV             = false
 
 ------------- OnPlayerLoaded Event ---------------------
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
@@ -18,24 +18,24 @@ end)
 
 ----------- NUI Callbacks for LUA to JS -----------------
 RegisterNUICallback('question', function(data, cb)
-    SendNUIMessage({
-      openSection = 'question'
-    })
-    cb()
+  SendNUIMessage({
+    openSection = 'question'
+  })
+  cb()
 end)
 
 RegisterNUICallback('close', function(data, cb)
-    StopTheoryTest(true)
-    cb()
+  StopTheoryTest(true)
+  cb()
 end)
 
 RegisterNUICallback('kick', function(data, cb)
-    StopTheoryTest(false)
-    cb()
+  StopTheoryTest(false)
+  cb()
 end)
 
 ---------------------------------------
-            -- EVENTS --
+-- EVENTS --
 ---------------------------------------
 
 RegisterNetEvent('qb-dmv:startdriver', function()
@@ -47,33 +47,33 @@ RegisterNetEvent('qb-dmv:startdriver', function()
   CurrentZoneType = 'residence'
   local prevCoords = GetEntityCoords(PlayerPedId())
   QBCore.Functions.SpawnVehicle(Config.VehicleModels.driver, function(veh)
-      TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-      exports['LegacyFuel']:SetFuel(veh, 100)
-      SetVehicleNumberPlateText(veh, 'DMV')
-      SetEntityAsMissionEntity(veh, true, true)
-      SetEntityHeading(veh, Config.Location['spawn'].w)
-      TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlate(veh))
-      TriggerServerEvent('qb-vehicletuning:server:SaveVehicleProps', QBCore.Functions.GetVehicleProperties(veh))
-      LastVehicleHealth = GetVehicleBodyHealth(veh)
-      CurrentVehicle = veh
-      TriggerEvent('qb-dmv:Notify', 'You are taking the driving test.', 3000, 'success', 'Taking Driving Test')
+    TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+    exports['LegacyFuel']:SetFuel(veh, 100)
+    SetVehicleNumberPlateText(veh, 'DMV')
+    SetEntityAsMissionEntity(veh, true, true)
+    SetEntityHeading(veh, Config.Location['spawn'].w)
+    TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlate(veh))
+    TriggerServerEvent('qb-vehicletuning:server:SaveVehicleProps', QBCore.Functions.GetVehicleProperties(veh))
+    LastVehicleHealth = GetVehicleBodyHealth(veh)
+    CurrentVehicle = veh
+    TriggerEvent('qb-dmv:Notify', 'You are taking the driving test.', 3000, 'success', 'Taking Driving Test')
   end, Config.Location['spawn'], false)
 end)
 
 RegisterNetEvent('qb-dmv:startquiz')
-AddEventHandler('qb-dmv:startquiz', function ()
+AddEventHandler('qb-dmv:startquiz', function()
   CurrentTest = 'theory'
   SendNUIMessage({
     Wait(10),
     openQuestion = true
   })
 
-  SetTimeout(200, function ()
-      SetNuiFocus(true, true)
+  SetTimeout(200, function()
+    SetNuiFocus(true, true)
   end)
 end)
 
-RegisterNetEvent('qb-dmv:Notify', function (msg, time, type, title)
+RegisterNetEvent('qb-dmv:Notify', function(msg, time, type, title)
   local notify = Config.NotifyType
   if type == 'info' then
     if notify == 'qbcore' then
@@ -95,29 +95,30 @@ RegisterNetEvent('qb-dmv:Notify', function (msg, time, type, title)
     exports['okokNotify']:Alert(title, msg, time, type)
   else
     TriggerEvent('chat:addMessage', {
-      color = {255, 0, 0},
+      color = { 255, 0, 0 },
       multiline = false,
-      args = {title, msg}
+      args = { title, msg }
     })
   end
 end)
 
-RegisterNetEvent('qb-dmv:client:dmvoptions', function ()
+RegisterNetEvent('qb-dmv:client:dmvoptions', function()
   --DMVOptions()
   local drive = Config.DriversTest
   if CurrentTest == 'drive' then
     TriggerEvent('qb-dmv:Notify', 'You\'re already taking the driving test.', 3000, 'error', 'Already Taking Test')
   else
-    QBCore.Functions.TriggerCallback('qb-dmv:server:permitdata', function (permit)
+    QBCore.Functions.TriggerCallback('qb-dmv:server:permitdata', function(permit)
       if permit then
         OpenMenu('theoritical')
       else
-        QBCore.Functions.TriggerCallback('qb-dmv:server:licensedata', function (license)
+        QBCore.Functions.TriggerCallback('qb-dmv:server:licensedata', function(license)
           if license then
             if drive then
               OpenMenu('driver')
             else
-              TriggerEvent('qb-dmv:Notify', 'You already took your tests! Go to the City Hall to buy your license', 3000, 'info', 'Already took the test')
+              TriggerEvent('qb-dmv:Notify', 'You already took your tests! Go to the City Hall to buy your license', 3000
+                , 'info', 'Already took the test')
             end
           end
         end)
@@ -127,13 +128,13 @@ RegisterNetEvent('qb-dmv:client:dmvoptions', function ()
 end)
 
 ---------------------------------------
-            -- FUNCTIONS --
+-- FUNCTIONS --
 ---------------------------------------
 
-DrawText3Ds = function(x,y,z, text)
-  local onScreen,_x,_y=World3dToScreen2d(x,y,z)
+DrawText3Ds = function(x, y, z, text)
+  local onScreen, _x, _y = World3dToScreen2d(x, y, z)
   local factor = #text / 370
-  local px,py,pz=table.unpack(GetGameplayCamCoords())
+  local px, py, pz = table.unpack(GetGameplayCamCoords())
 
   SetTextScale(0.35, 0.35)
   SetTextFont(4)
@@ -142,8 +143,8 @@ DrawText3Ds = function(x,y,z, text)
   SetTextEntry("STRING")
   SetTextCentre(1)
   AddTextComponentString(text)
-  DrawText(_x,_y)
-  DrawRect(_x,_y + 0.0125, 0.015 + factor, 0.03, 0, 0, 0, 120)
+  DrawText(_x, _y)
+  DrawRect(_x, _y + 0.0125, 0.015 + factor, 0.03, 0, 0, 0, 120)
 end
 
 function DrawMissionText(msg, time)
@@ -157,7 +158,7 @@ function SetCurrentZoneType(type)
   CurrentZoneType = type
 end
 
-function StopTheoryTest(success) 
+function StopTheoryTest(success)
   CurrentTest = nil
   SendNUIMessage({
     openQuestion = false
@@ -187,12 +188,13 @@ function StopDriveTest(success)
     RemoveBlip(CurrentBlip)
     QBCore.Functions.DeleteVehicle(veh)
     Wait(1000)
-    SetEntityCoords(playerPed, Config.Location['marker'].x+1, Config.Location['marker'].y+1, Config.Location['marker'].z)
+    SetEntityCoords(playerPed, Config.Location['marker'].x + 1, Config.Location['marker'].y + 1,
+      Config.Location['marker'].z)
   end
 
   CurrentTest     = nil
   CurrentTestType = nil
-  
+
 end
 
 function OpenMenu(menu)
@@ -204,7 +206,7 @@ function OpenMenu(menu)
       },
       {
         header = "Start Theoretical Test",
-        txt = "$"..Config.Amount['theoretical'].."",
+        txt = "$" .. Config.Amount['theoretical'] .. "",
         params = {
           event = 'qb-dmv:startquiz',
           args = {
@@ -221,7 +223,7 @@ function OpenMenu(menu)
       },
       {
         header = "Start Driving Test",
-        txt = "$"..Config.Amount['driving'].."",
+        txt = "$" .. Config.Amount['driving'] .. "",
         params = {
           event = 'qb-dmv:startdriver',
           args = {
@@ -231,7 +233,7 @@ function OpenMenu(menu)
       },
       {
         header = "Start CDL Drving Test",
-        txt = "$"..Config.Amount['cdl'].."",
+        txt = "$" .. Config.Amount['cdl'] .. "",
         params = {
           event = 'qb-dmv:startcdl'
         }
@@ -263,25 +265,25 @@ end
   end
 end]]
 ---------------------------------------
-            -- THREADS --
+-- THREADS --
 ---------------------------------------
 
-CreateThread(function ()
+CreateThread(function()
   while true do
-      Wait(10)
-      if CurrentTest =='theory' then
-          local playerPed = GetPlayerPed(-1)
+    Wait(10)
+    if CurrentTest == 'theory' then
+      local playerPed = GetPlayerPed(-1)
 
-          DisableControlAction(0, 1, true) -- LookLeftRight
-          DisableControlAction(0, 2, true) -- LookUpDown
-          DisablePlayerFiring(playerPed, true) -- Disable weapon firing
-          DisableControlAction(0, 142, true) -- MeleeAttackAlternate
-          DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
-      end
+      DisableControlAction(0, 1, true) -- LookLeftRight
+      DisableControlAction(0, 2, true) -- LookUpDown
+      DisablePlayerFiring(playerPed, true) -- Disable weapon firing
+      DisableControlAction(0, 142, true) -- MeleeAttackAlternate
+      DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
+    end
   end
 end)
 
-CreateThread(function ()
+CreateThread(function()
   blip = AddBlipForCoord(Config.Location['marker'].x, Config.Location['marker'].y, Config.Location['marker'].z)
   SetBlipSprite(blip, Config.Blip.Sprite)
   SetBlipDisplay(blip, Config.Blip.Display)
@@ -293,11 +295,12 @@ CreateThread(function ()
   EndTextCommandSetBlipName(blip)
 end)
 
-CreateThread( function ()
+CreateThread(function()
   if not Config.UseTarget then
     if Config.UseNewQB then
-      local dmvzone = CircleZone:Create(vector3(Config.Location['coords']['x'], Config.Location['coords']['y'], Config.Location['coords']['z']), Config.Location['radius'], {useZ = Config.Location['useZ']})
-      dmvzone:onPlayerInOut( function (isPointInside)
+      local dmvzone = CircleZone:Create(vector3(Config.Location['coords']['x'], Config.Location['coords']['y'],
+        Config.Location['coords']['z']), Config.Location['radius'], { useZ = Config.Location['useZ'] })
+      dmvzone:onPlayerInOut(function(isPointInside)
         if isPointInside then
           inDMV = true
           exports['qb-core']:DrawText('[E] Open DMV')
@@ -311,37 +314,41 @@ CreateThread( function ()
         local drive = Config.DriversTest
         local ped = PlayerPedId()
         local pos = GetEntityCoords(ped)
-        local dist = GetDistanceBetweenCoords(pos,Config.Location['marker'].x, Config.Location['marker'].y, Config.Location['marker'].z, true)
+        local dist = GetDistanceBetweenCoords(pos, Config.Location['marker'].x, Config.Location['marker'].y,
+          Config.Location['marker'].z, true)
         if dist <= 6.0 then
-          local marker ={
-              ['x'] = Config.Location['marker'].x,
-              ['y'] = Config.Location['marker'].y,
-              ['z'] = Config.Location['marker'].z
+          local marker = {
+            ['x'] = Config.Location['marker'].x,
+            ['y'] = Config.Location['marker'].y,
+            ['z'] = Config.Location['marker'].z
           }
           DrawText3Ds(marker['x'], marker['y'], marker['z'], "[E] Open Menu")
           if dist <= 1.5 then
             if CurrentTest ~= 'drive' then
               if IsControlJustReleased(0, 46) then
-                QBCore.Functions.TriggerCallback('qb-dmv:server:permitdata', function (permit)
-                    if permit == false then
-                        QBCore.Functions.TriggerCallback('qb-dmv:server:licensedata', function (license)
-                            if license then
-                                if drive then
-                                    Wait(10)
-                                    OpenMenu('driver')
-                                end
-                            else
-                              TriggerEvent('qb-dmv:Notify', 'You already took your tests! Go to the City Hall to buy your license.', 3000, 'info', 'Already took the Test')
-                            end
-                        end)
-                    else
-                      Wait(10)
-                      OpenMenu('theoritical')
-                    end
+                QBCore.Functions.TriggerCallback('qb-dmv:server:permitdata', function(permit)
+                  if permit == false then
+                    QBCore.Functions.TriggerCallback('qb-dmv:server:licensedata', function(license)
+                      if license then
+                        if drive then
+                          Wait(10)
+                          OpenMenu('driver')
+                        end
+                      else
+                        TriggerEvent('qb-dmv:Notify',
+                          'You already took your tests! Go to the City Hall to buy your license.', 3000, 'info',
+                          'Already took the Test')
+                      end
+                    end)
+                  else
+                    Wait(10)
+                    OpenMenu('theoritical')
+                  end
                 end)
               end
             elseif CurrentTest == 'drive' and IsControlJustReleased(0, 46) then
-              TriggerEvent('qb-dmv:Notify', 'You\'re already taking the driving test.', 3000, 'error', 'Already Taking Test')
+              TriggerEvent('qb-dmv:Notify', 'You\'re already taking the driving test.', 3000, 'error',
+                'Already Taking Test')
             end
           end
         end
@@ -357,15 +364,15 @@ CreateThread( function ()
       invincible = Config.TargetOptions.invincible,
       blockevents = Config.TargetOptions.blockevents,
       target = {
-          options = {
-            {
-              type = 'client',
-              icon = Config.TargetOptions.options.icon,
-              label = Config.TargetOptions.options.label,
-              event = 'qb-dmv:client:dmvoptions'
-            },
+        options = {
+          {
+            type = 'client',
+            icon = Config.TargetOptions.options.icon,
+            label = Config.TargetOptions.options.label,
+            event = 'qb-dmv:client:dmvoptions'
           },
-          distance = Config.Location['radius'],
+        },
+        distance = Config.Location['radius'],
       }
     })
   end
@@ -388,7 +395,7 @@ CreateThread(function()
   while true do
     Wait(10)
     if CurrentTest == 'drive' then
-      local marker = Config.Location['marker']
+      local marker         = Config.Location['marker']
       local playerPed      = PlayerPedId()
       local coords         = GetEntityCoords(playerPed)
       local nextCheckPoint = CurrentCheckPoint + 1
@@ -403,13 +410,17 @@ CreateThread(function()
           if DoesBlipExist(CurrentBlip) then
             RemoveBlip(CurrentBlip)
           end
-          CurrentBlip = AddBlipForCoord(Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z)
+          CurrentBlip = AddBlipForCoord(Config.CheckPoints[nextCheckPoint].Pos.x,
+            Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z)
           SetBlipRoute(CurrentBlip, 1)
           LastCheckPoint = CurrentCheckPoint
         end
-        local distance = GetDistanceBetweenCoords(coords, Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z, true)
+        local distance = GetDistanceBetweenCoords(coords, Config.CheckPoints[nextCheckPoint].Pos.x,
+          Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z, true)
         if distance <= 100.0 then
-          DrawMarker(1, Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.5, 102, 204, 102, 100, false, true, 2, false, false, false, false)
+          DrawMarker(1, Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y,
+            Config.CheckPoints[nextCheckPoint].Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.5, 102, 204, 102, 100,
+            false, true, 2, false, false, false, false)
         end
         if distance <= 3.0 then
           Config.CheckPoints[nextCheckPoint].Action(playerPed, CurrentVehicle, SetCurrentZoneType)
@@ -425,39 +436,39 @@ end)
 CreateThread(function()
   while true do
     Wait(10)
-      if CurrentTest == 'drive' then
-          local playerPed = PlayerPedId()
-          if IsPedInAnyVehicle(playerPed,  false) then
-              local vehicle      = GetVehiclePedIsIn(playerPed,  false)
-              local speed        = GetEntitySpeed(vehicle) * Config.SpeedMultiplier
-              local tooMuchSpeed = false
-              for k,v in pairs(Config.SpeedLimits) do
-                  if CurrentZoneType == k and speed > v then
-                  tooMuchSpeed = true
-                      if not IsAboveSpeedLimit then
-                          print(speed)
-                          DriveErrors       = DriveErrors + 1
-                          IsAboveSpeedLimit = true
-                          QBCore.Functions.Notify('Te snel rijden',"error")
-                          QBCore.Functions.Notify("Fouten:"..tostring(DriveErrors).."/" ..Config.MaxErrors, "error")
-                      end
-                  end
-              end
-              if not tooMuchSpeed then
-                  IsAboveSpeedLimit = false
-              end
-              local health = GetVehicleBodyHealth(vehicle)
-              if health < LastVehicleHealth then
-                  DriveErrors = DriveErrors + 1
-                  QBCore.Functions.Notify('U hebt het voertuig beschadigd')
-                  QBCore.Functions.Notify("Fouten:"..tostring(DriveErrors).."/" ..Config.MaxErrors, "error")
-                  LastVehicleHealth = health
-              end
-              if DriveErrors >= Config.MaxErrors then
-                Wait(10)
-                StopDriveTest(false)
-              end
+    if CurrentTest == 'drive' then
+      local playerPed = PlayerPedId()
+      if IsPedInAnyVehicle(playerPed, false) then
+        local vehicle      = GetVehiclePedIsIn(playerPed, false)
+        local speed        = GetEntitySpeed(vehicle) * Config.SpeedMultiplier
+        local tooMuchSpeed = false
+        for k, v in pairs(Config.SpeedLimits) do
+          if CurrentZoneType == k and speed > v then
+            tooMuchSpeed = true
+            if not IsAboveSpeedLimit then
+              print(speed)
+              DriveErrors       = DriveErrors + 1
+              IsAboveSpeedLimit = true
+              QBCore.Functions.Notify('Te snel rijden', "error")
+              QBCore.Functions.Notify("Fouten:" .. tostring(DriveErrors) .. "/" .. Config.MaxErrors, "error")
+            end
           end
+        end
+        if not tooMuchSpeed then
+          IsAboveSpeedLimit = false
+        end
+        local health = GetVehicleBodyHealth(vehicle)
+        if health < LastVehicleHealth then
+          DriveErrors = DriveErrors + 1
+          QBCore.Functions.Notify('U hebt het voertuig beschadigd')
+          QBCore.Functions.Notify("Fouten:" .. tostring(DriveErrors) .. "/" .. Config.MaxErrors, "error")
+          LastVehicleHealth = health
+        end
+        if DriveErrors >= Config.MaxErrors then
+          Wait(10)
+          StopDriveTest(false)
+        end
       end
+    end
   end
 end)
