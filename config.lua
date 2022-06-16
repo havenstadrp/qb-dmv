@@ -67,7 +67,7 @@ Config.CheckPoints = { -- Each Cheackpoint for the Drivers Test
   {
     Pos = { x = 255.139, y = -1400.731, z = 28.537 },
     Action = function(playerPed, vehicle, setCurrentZoneType)
-      DrawMissionText('Ga naar het volgend punt (' .. Config.SpeedLimits['traag'] - 5 .. ' km/h)', 5000)
+      DrawMissionText('Ga naar het volgende punt (' .. Config.SpeedLimits['traag'] - 5 .. ' km/h)', 5000)
     end
   },
 
@@ -75,7 +75,7 @@ Config.CheckPoints = { -- Each Cheackpoint for the Drivers Test
   {
     Pos = { x = 271.874, y = -1370.574, z = 29.932 },
     Action = function(playerPed, vehicle, setCurrentZoneType)
-      DrawMissionText('Nergens tegenrijden, he!', 5000)
+      DrawMissionText('Nergens tegen rijden, he!', 5000)
     end
   },
 
@@ -153,7 +153,7 @@ Config.CheckPoints = { -- Each Cheackpoint for the Drivers Test
     Action = function(playerPed, vehicle, setCurrentZoneType)
       setCurrentZoneType('snelweg')
       DrawMissionText('U mag nu de snelweg oprijden. Let goed op uw snelheid (' ..
-        Config.SpeedLimits['snelweg'] -5 .. ' km/h)', 5000)
+        Config.SpeedLimits['snelweg'] - 5 .. ' km/h)', 5000)
       PlaySound(-1, 'RACE_PLACED', 'HUD_AWARDS', 0, 0, 1)
     end
   },
@@ -211,7 +211,7 @@ Config.CheckPoints = { -- Each Cheackpoint for the Drivers Test
       Citizen.Wait(6000)
       FreezeEntityPosition(vehicle, false)
       DrawMissionText('Verdorie, pokemon kwijt. Euhm hier links af naar de stad (' ..
-        Config.SpeedLimits['stad'] -5 .. ' km/h)', 5000)
+        Config.SpeedLimits['stad'] - 5 .. ' km/h)', 5000)
     end
   },
   --17
@@ -240,7 +240,7 @@ Config.CheckPoints = { -- Each Cheackpoint for the Drivers Test
     Pos = { x = 1250.306, y = 2685.479, z = 37.176 },
     Action = function(playerPed, vehicle, setCurrentZoneType)
       setCurrentZoneType('stad')
-      DrawMissionText('Niet vergeten, te tanken zie linker kant (' .. Config.SpeedLimits['bbkom'] - 5 .. ' km/h)', 5000)
+      DrawMissionText('Niet vergeten, te tanken zie linker kant (' .. Config.SpeedLimits['stad'] - 5 .. ' km/h)', 5000)
     end
   },
   --21
@@ -346,7 +346,8 @@ Config.CheckPoints = { -- Each Cheackpoint for the Drivers Test
   {
     Pos = { x = -540.336, y = 278.2394, z = 81.578 },
     Action = function(playerPed, vehicle, setCurrentZoneType)
-      DrawMissionText('Hier moet je traag rijden (' .. Config.SpeedLimits['bbkom'] -5 .. ' km/h)', 5000)
+      setCurrentZoneType('stad')
+      DrawMissionText('Je bent terug in de stad (' .. Config.SpeedLimits['stad'] - 5 .. ' km/h)', 5000)
     end
   },
   --37
@@ -389,12 +390,13 @@ Config.CheckPoints = { -- Each Cheackpoint for the Drivers Test
   {
     Pos = { x = -255.217, y = -637.447, z = 32.055 },
     Action = function(playerPed, vehicle, setCurrentZoneType)
-      DrawMissionText('Sla links af en direct terug rechts.', 5000)
+      setCurrentZoneType('bbkom')
+      DrawMissionText('Sla links af en direct terug rechts.(' .. Config.SpeedLimits['bbkom'] - 5 .. ' km/h)', 5000)
     end
   },
   --42
   {
-    Pos = { x = -285.154, y = -854.646, z = 30.351 },
+    Pos = { x = -280.859, y = -830.093, z = 31.527 },
     Action = function(playerPed, vehicle, setCurrentZoneType)
       DrawMissionText('Hier naar links', 5000)
     end

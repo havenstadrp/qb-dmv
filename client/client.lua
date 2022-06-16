@@ -113,9 +113,9 @@ RegisterNetEvent('qb-dmv:client:dmvoptions', function()
         OpenMenu('theoritical')
       else
         QBCore.Functions.TriggerCallback('qb-dmv:server:licensedata', function(license)
-          if license then
+          if license or Config.Debug then
             print('working')
-            if drive then
+            if drive or Config.Debug then
               OpenMenu('driver')
             else
               TriggerEvent('qb-dmv:Notify', 'You already took your tests! Go to the City Hall to buy your license', 3000
@@ -396,7 +396,7 @@ end)
 -- Drive test
 CreateThread(function()
   while true do
-    Wait(10)
+    Wait(0)
     if CurrentTest == 'drive' then
       local marker         = Config.Location['marker']
       local playerPed      = PlayerPedId()
@@ -421,9 +421,10 @@ CreateThread(function()
         local distance = GetDistanceBetweenCoords(coords, Config.CheckPoints[nextCheckPoint].Pos.x,
           Config.CheckPoints[nextCheckPoint].Pos.y, Config.CheckPoints[nextCheckPoint].Pos.z, true)
         if distance <= 100.0 then
-          DrawMarker(1, Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y,
-            Config.CheckPoints[nextCheckPoint].Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.5, 102, 204, 102, 100,
-            false, true, 2, false, false, false, false)
+          Wait(0)
+          DrawMarker(2, Config.CheckPoints[nextCheckPoint].Pos.x, Config.CheckPoints[nextCheckPoint].Pos.y,
+            Config.CheckPoints[nextCheckPoint].Pos.z + 2, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 2.0, 2.0, 2.0, 3, 28, 252, 100,
+            true, true, 2, false, nil, nil, false)
         end
         if distance <= 3.0 then
           Config.CheckPoints[nextCheckPoint].Action(playerPed, CurrentVehicle, SetCurrentZoneType)
